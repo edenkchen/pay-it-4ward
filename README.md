@@ -3,7 +3,7 @@
 Website for **Pay It 4Ward**, a pickleball academy run by coach **Kai Chen**.
 Static HTML/CSS/JS — no build step, no dependencies. Just edit and push.
 
-**Live site:** _add your GitHub Pages URL here once Pages is turned on_
+**Live site:** https://edenkchen.github.io/pay-it-4ward/
 
 ---
 
@@ -21,21 +21,18 @@ Static HTML/CSS/JS — no build step, no dependencies. Just edit and push.
 
 ## The three things you'll actually want to change
 
-### 1. Swap in the real logo
+### 1. The logo
 
-Replace **`assets/img/logo.svg`** with your logo. Two options:
+The academy logo lives at **`assets/img/logo.png`** — a transparent PNG of the
+circular badge. It appears in the top-left of every page, in the footer, as the
+browser tab icon, and on the loading splash that plays when any page opens.
 
-- **Easiest:** save your logo as an SVG named `logo.svg` and overwrite that file.
-  Everything updates automatically — nav, footer, favicon, and the loading screen.
-- **PNG instead:** drop `logo.png` into `assets/img/`, then find-and-replace
-  `assets/img/logo.svg` → `assets/img/logo.png` across the five `.html` files.
+To change it later, overwrite that one file and every use updates. Keep it
+square and transparent; around 500 x 500 px is plenty.
 
-The logo appears in the top-left of every page, in the footer, as the browser tab
-icon, and on the loading splash that plays when any page opens.
-
-> If your logo already includes the words "Pay It 4Ward", delete the
-> `<span class="brand__text">…</span>` block in each page's header so the name
-> isn't printed twice.
+The flyer tagline is saved separately at `assets/img/tagline.png`. The site
+doesn't use the image — "Feelin' stuck?" is set in live text above the homepage
+headline so it stays sharp at any size.
 
 ### 2. Add photos to the slider and gallery
 
@@ -99,8 +96,12 @@ Everything is plain HTML — open a file, find the text, change it, save.
   block to add a third.
 - **Prices:** `programs.html` — each card says "Contact for rates"; replace with
   real numbers when you're ready.
-- **Colors:** `assets/css/styles.css`, the `:root` block at the very top. Change
-  `--lime`, `--coral`, `--teal` and the whole site follows.
+- **Colors:** `assets/css/styles.css`, the `:root` block at the very top. The
+  palette is taken from the logo — `--lime` is the ball yellow `#EFD335`,
+  `--coral` is the sky blue `#2BA3EE`, `--teal` is the forest green `#3F7A20`,
+  and `--ink` is the near-black green background. Change them there and the
+  whole site follows. (The variable names are historical; the values are what
+  matter.)
 
 ---
 
@@ -123,7 +124,7 @@ Then open <http://localhost:8000>. (Opening the HTML files directly also works.)
 │   ├── css/styles.css          design system + all styles
 │   ├── js/main.js              preloader, nav, carousel, form
 │   ├── js/gallery-config.js    ← the photo list you edit
-│   ├── img/                    logo, ball graphic, coach photo
+│   ├── img/                    logo.png, tagline.png, ball.svg, coach photo
 │   └── gallery/                ← drop photos here
 ├── .nojekyll                   tells GitHub Pages to serve files as-is
 └── README.md

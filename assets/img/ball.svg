@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Pickleball">
   <defs>
     <radialGradient id="ball-shade" cx="35%" cy="30%" r="75%">
-      <stop offset="0" stop-color="#EAFFB0"/>
-      <stop offset="55%" stop-color="#C8FF3D"/>
-      <stop offset="100%" stop-color="#8FC80F"/>
+      <stop offset="0" stop-color="#FBF0B8"/>
+      <stop offset="55%" stop-color="#EFD335"/>
+      <stop offset="100%" stop-color="#C9A800"/>
     </radialGradient>
   </defs>
   <circle cx="100" cy="100" r="92" fill="url(#ball-shade)"/>
-  <g fill="#0C1222" opacity=".42">
+  <g fill="#3F7A20" opacity=".72">
     <circle cx="72" cy="52" r="9"/>
     <circle cx="112" cy="44" r="9"/>
     <circle cx="148" cy="72" r="9"/>
@@ -20,5 +20,5 @@
     <circle cx="36" cy="132" r="7"/>
     <circle cx="164" cy="110" r="7"/>
   </g>
-  <circle cx="100" cy="100" r="92" fill="none" stroke="#0C1222" stroke-opacity=".18" stroke-width="3"/>
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#3F7A20" stroke-opacity=".18" stroke-width="3"/>
 </svg>
