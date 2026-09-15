@@ -13,13 +13,13 @@ Static HTML/CSS/JS — no build step, no dependencies. Just edit and push.
 |---|---|
 | `index.html` | Home — hero, student reviews, photo slider, approach, coach preview |
 | `about.html` | About Coach Kai |
-| `programs.html` | Lessons, programs, and FAQ |
+| `programs.html` | The two lesson options, the 5-question assessment, ways to give back, FAQ |
 | `gallery.html` | Full photo gallery + slider |
 | `contact.html` | Contact details and message form |
 
 ---
 
-## The three things you'll actually want to change
+## The things you'll actually want to change
 
 ### 1. The logo
 
@@ -59,7 +59,39 @@ about 500 KB each so pages stay fast.
 <img src="assets/img/coach-kai.jpg" alt="Coach Kai Chen on the court">
 ```
 
-### 3. Turn on the contact form
+### 3. Fill in the Venmo / Zelle handles
+
+Lessons are free; the site asks people to pay it forward instead. On
+`programs.html`, the "A donation" card currently shows **placeholders**:
+
+```html
+<li>Venmo: <span class="handle">@add-handle-here</span></li>
+<li>Zelle: <span class="handle">add phone or email here</span></li>
+```
+
+Replace the text inside each `<span class="handle">`. If Kai would rather keep
+his payment details off a public page, delete those two `<li>` lines and tell
+people to ask him directly instead.
+
+### 4. Edit the 5-question assessment
+
+All the questions, answers, scoring and level bands live in one file:
+**`assets/js/quiz-config.js`**. Nothing else needs touching.
+
+- Each answer is worth **0-3 points**.
+- Questions tagged `skill` add up to 0-9 and pick a band from `levelBands`.
+- Questions tagged `commitment` add up to 0-6 and pick a note from `commitment`.
+- An answer's optional `focus` line becomes part of the "what to work on" list
+  (the lowest-scoring answers win, up to three).
+
+To reword a question or answer, just change its text. To retune the bands,
+change the `max` values. The file has comments explaining the shape.
+
+The result is handed to the contact page through the browser's `sessionStorage`,
+so the message field arrives pre-filled. Nothing is sent anywhere until the
+visitor presses Send.
+
+### 5. Turn on the contact form
 
 The form currently falls back to opening the visitor's messaging app addressed to
 917-459-8600. To get form submissions by email instead:
@@ -94,8 +126,10 @@ Everything is plain HTML — open a file, find the text, change it, save.
 - **Reviews:** in the `<section id="reviews">` block of `index.html` (and repeated
   near the bottom of `about.html`). Copy an existing `<figure class="review">`
   block to add a third.
-- **Prices:** `programs.html` — each card says "Contact for rates"; replace with
-  real numbers when you're ready.
+- **Lessons:** `programs.html` holds the two options (individual and small
+  group), the assessment, and the "ways to give back" cards.
+- **The free / pay-it-forward message:** appears in the dark `freebar` block on
+  both `index.html` and `programs.html`, and in the FAQ.
 - **Colors:** `assets/css/styles.css`, the `:root` block at the very top. The
   palette is taken from the logo — `--lime` is the ball yellow `#EFD335`,
   `--coral` is the sky blue `#2BA3EE`, `--teal` is the forest green `#3F7A20`,
@@ -122,8 +156,9 @@ Then open <http://localhost:8000>. (Opening the HTML files directly also works.)
 ├── index.html · about.html · programs.html · gallery.html · contact.html
 ├── assets/
 │   ├── css/styles.css          design system + all styles
-│   ├── js/main.js              preloader, nav, carousel, form
+│   ├── js/main.js              preloader, nav, carousel, quiz, form
 │   ├── js/gallery-config.js    ← the photo list you edit
+│   ├── js/quiz-config.js       ← the 5 questions and scoring
 │   ├── img/                    logo.png, tagline.png, ball.svg, coach photo
 │   └── gallery/                ← drop photos here
 ├── .nojekyll                   tells GitHub Pages to serve files as-is

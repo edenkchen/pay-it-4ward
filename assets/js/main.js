@@ -330,6 +330,257 @@
   })();
 
   /* ================================================================
+     6b. SELF-ASSESSMENT QUIZ
+     Questions live in assets/js/quiz-config.js. The result is handed to
+     the contact page through sessionStorage so Kai sees it when someone
+     reaches out. Nothing is sent anywhere until they submit the form.
+     ================================================================ */
+  (function quiz() {
+    var root = $("#quiz");
+    if (!root) return;
+
+    var cfg = window.P4W_QUIZ;
+    if (!cfg || !cfg.questions || !cfg.questions.length) return;
+
+    var qs = cfg.questions;
+    var answers = new Array(qs.length).fill(null);
+    var step = 0;
+
+    var bar    = $("#quizBar", root);
+    var body   = $("#quizBody", root);
+    var result = $("#quizResult", root);
+
+    var LETTERS = ["A", "B", "C", "D", "E"];
+
+    function progress() {
+      var done = answers.filter(function (a) { return a !== null; }).length;
+      if (bar) bar.style.width = Math.round((done / qs.length) * 100) + "%";
+    }
+
+    function render() {
+      var q = qs[step];
+      body.innerHTML = "";
+
+      var count = document.createElement("p");
+      count.className = "quiz__count";
+      count.textContent = "Question " + (step + 1) + " of " + qs.length;
+      body.appendChild(count);
+
+      var h = document.createElement("p");
+      h.className = "quiz__q";
+      h.textContent = q.q;
+      body.appendChild(h);
+
+      if (q.help) {
+        var help = document.createElement("p");
+        help.className = "quiz__help";
+        help.textContent = q.help;
+        body.appendChild(help);
+      }
+
+      var list = document.createElement("div");
+      list.className = "quiz__options";
+
+      q.options.forEach(function (opt, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "quiz__option";
+        b.setAttribute("aria-pressed", String(answers[step] === i));
+
+        var key = document.createElement("span");
+        key.className = "quiz__key";
+        key.textContent = LETTERS[i] || String(i + 1);
+        b.appendChild(key);
+
+        var txt = document.createElement("span");
+        txt.textContent = opt.label;
+        b.appendChild(txt);
+
+        b.addEventListener("click", function () {
+          answers[step] = i;
+          progress();
+          $$(".quiz__option", list).forEach(function (o, n) {
+            o.setAttribute("aria-pressed", String(n === i));
+          });
+          setTimeout(function () {
+            if (step < qs.length - 1) { step++; render(); }
+            else { finish(); }
+          }, 220);
+        });
+
+        list.appendChild(b);
+      });
+      body.appendChild(list);
+
+      var nav = document.createElement("div");
+      nav.className = "quiz__nav";
+      var back = document.createElement("button");
+      back.type = "button";
+      back.className = "quiz__back";
+      back.textContent = "← Back";
+      back.hidden = step === 0;
+      back.addEventListener("click", function () { step--; render(); });
+      nav.appendChild(back);
+      body.appendChild(nav);
+
+      progress();
+    }
+
+    function pick(table, score) {
+      for (var i = 0; i < table.length; i++) {
+        if (score <= table[i].max) return table[i];
+      }
+      return table[table.length - 1];
+    }
+
+    function finish() {
+      var skill = 0, commit = 0, focus = [];
+
+      qs.forEach(function (q, i) {
+        var opt = q.options[answers[i]];
+        if (!opt) return;
+        if (q.type === "commitment") commit += opt.points;
+        else {
+          skill += opt.points;
+          if (opt.focus) focus.push({ text: opt.focus, points: opt.points });
+        }
+      });
+
+      var band = pick(cfg.levelBands, skill);
+      var mood = pick(cfg.commitment, commit);
+
+      // weakest areas first, at most three
+      focus.sort(function (a, b) { return a.points - b.points; });
+      var focusText = focus.slice(0, 3).map(function (f) { return f.text; });
+
+      var suggestion = mood.suggest === "group"
+        ? { key: "group",      name: "Small group session (2–3 players)" }
+        : { key: "individual", name: "Individual lesson" };
+
+      // hand the result to the contact page
+      var payload = {
+        band: band.band,
+        name: band.name,
+        focus: focusText,
+        mood: mood.label,
+        suggest: suggestion.key,
+        suggestName: suggestion.name,
+        answers: qs.map(function (q, i) {
+          var o = q.options[answers[i]];
+          return { q: q.q, a: o ? o.label : "" };
+        })
+      };
+      try { sessionStorage.setItem("p4w_quiz", JSON.stringify(payload)); } catch (e) {}
+
+      body.hidden = true;
+      if (bar) bar.style.width = "100%";
+
+      result.innerHTML =
+        '<div class="result__band">' +
+          "<b>" + band.band + "</b>" +
+          "<strong>" + band.name + "</strong>" +
+          "<small>Your self-assessed starting point</small>" +
+        "</div>" +
+        "<p>" + band.blurb + "</p>" +
+        '<p class="result__caveat">This is a self-assessment, not an official ' +
+          "USA Pickleball or DUPR rating — those come from rated matches. It just " +
+          "gives Kai a sensible place to start on day one, and he'll adjust once " +
+          "he sees you play.</p>" +
+        "<h3>What to work on first</h3>" +
+        '<ul class="result__focus">' +
+          (focusText.length
+            ? focusText.map(function (f) { return "<li>" + f + "</li>"; }).join("")
+            : "<li>Sharpening what you already do well — Kai will find the gaps on court.</li>") +
+        "</ul>" +
+        '<span class="result__tag">' + mood.label + "</span>" +
+        "<p>" + mood.note + "</p>" +
+        "<h3>Suggested starting point</h3>" +
+        "<p><strong>" + suggestion.name + "</strong> — but either option is open to you; " +
+          "pick whichever you'd enjoy more.</p>" +
+        '<div class="btn-row" style="margin-top:22px">' +
+          '<a class="btn" href="contact.html?from=quiz">Take this to Kai</a>' +
+          '<button class="btn btn--ghost" type="button" id="quizReset">Start over</button>' +
+        "</div>";
+
+      result.hidden = false;
+      result.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      var reset = $("#quizReset", result);
+      reset && reset.addEventListener("click", function () {
+        answers = new Array(qs.length).fill(null);
+        step = 0;
+        try { sessionStorage.removeItem("p4w_quiz"); } catch (e) {}
+        result.hidden = true;
+        body.hidden = false;
+        render();
+        root.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+
+    render();
+  })();
+
+  /* ================================================================
+     6c. CARRY THE QUIZ RESULT INTO THE CONTACT FORM
+     ================================================================ */
+  (function prefillFromQuiz() {
+    var form = $("#contactForm");
+    if (!form) return;
+
+    var raw = null;
+    try { raw = sessionStorage.getItem("p4w_quiz"); } catch (e) { return; }
+    if (!raw) return;
+
+    var data;
+    try { data = JSON.parse(raw); } catch (e) { return; }
+    if (!data || !data.band) return;
+
+    // level select
+    var level = $("#level", form);
+    if (level) {
+      var wanted = data.name.toLowerCase();
+      $$("option", level).forEach(function (o) {
+        if (o.textContent.toLowerCase().indexOf(wanted) !== -1) level.value = o.value;
+      });
+    }
+
+    // lesson type select
+    var interest = $("#interest", form);
+    if (interest) {
+      var key = data.suggest === "group" ? "group" : "individual";
+      $$("option", interest).forEach(function (o) {
+        if (o.textContent.toLowerCase().indexOf(key) !== -1) interest.value = o.value;
+      });
+    }
+
+    // message
+    var msg = $("#message", form);
+    if (msg && !msg.value.trim()) {
+      var lines = [
+        "I took the self-assessment and came out at " + data.band + " (" + data.name + ").",
+        ""
+      ];
+      if (data.focus && data.focus.length) {
+        lines.push("Things to work on:");
+        data.focus.forEach(function (f) { lines.push("- " + f); });
+        lines.push("");
+      }
+      if (data.answers && data.answers.length) {
+        lines.push("My answers:");
+        data.answers.forEach(function (a) { lines.push("- " + a.q + " " + a.a); });
+      }
+      msg.value = lines.join("\n");
+    }
+
+    var flag = $("#quizFlag");
+    if (flag) {
+      flag.hidden = false;
+      flag.textContent = "Filled in from your self-assessment (" + data.band +
+                         " · " + data.name + "). Edit anything you like before sending.";
+    }
+  })();
+
+  /* ================================================================
      7. FOOTER YEAR
      ================================================================ */
   $$("[data-year]").forEach(function (el) {

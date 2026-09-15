@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Contact — Pay It 4Ward Pickleball Academy</title>
-<meta name="description" content="Book a pickleball lesson with coach Kai Chen. Call or text 917-459-8600, or send a message.">
+<meta name="description" content="Book a free pickleball lesson with coach Kai Chen. Call or text 917-459-8600, or send a message.">
 <meta name="theme-color" content="#0C1B12">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Contact — Pay It 4Ward Pickleball Academy">
-<meta property="og:description" content="Book a pickleball lesson with coach Kai Chen. Call or text 917-459-8600, or send a message.">
+<meta property="og:description" content="Book a free pickleball lesson with coach Kai Chen. Call or text 917-459-8600, or send a message.">
 <meta property="og:image" content="assets/img/logo.png">
 
 <link rel="icon" href="assets/img/logo.png" type="image/png">
@@ -64,8 +64,8 @@
   <div class="wrap">
     <span class="eyebrow">📬 Contact</span>
     <h1>Let's get you on the court</h1>
-    <p>Call, text, or send the form below. Tell Kai your level and what you'd like
-       to work on and he'll take it from there.</p>
+    <p>Lessons are free &mdash; just tell Kai where your game is at and what you'd
+       like to work on.</p>
   </div>
 </section>
 
@@ -98,13 +98,18 @@
       </div>
 
       <div class="card" style="margin-top:8px">
-        <h3>Helpful things to mention</h3>
-        <ul class="facts" style="margin-bottom:0">
-          <li>How long you've been playing</li>
-          <li>What you'd most like to improve</li>
-          <li>Private, semi-private, or clinic</li>
-          <li>Days and times that usually work</li>
-        </ul>
+        <h3>Haven't taken the assessment?</h3>
+        <p style="font-size:.96rem">Five quick questions give Kai your starting
+           level and fill this form in for you.</p>
+        <a class="btn btn--ghost" href="programs.html#assess">Take the 5 questions</a>
+      </div>
+
+      <div class="card">
+        <h3>A reminder on cost</h3>
+        <p style="font-size:.96rem;margin-bottom:0">Coaching is free. Kai asks that
+           you pay it forward instead &mdash; give back to the pickleball community,
+           or chip in toward gear.
+           <a href="programs.html#giveback" style="color:var(--ink);font-weight:700">See what that means</a>.</p>
       </div>
     </div>
 
@@ -112,6 +117,8 @@
           action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
       <h2 style="font-size:clamp(1.5rem,2.6vw,2rem)">Send a message</h2>
       <p style="font-size:.96rem">Fill this in and Kai will get back to you.</p>
+
+      <p class="form__status form__status--ok" id="quizFlag" hidden></p>
 
       <div class="field-row">
         <div class="field">
@@ -132,24 +139,22 @@
         <div class="field">
           <label for="level">Your level</label>
           <select id="level" name="level">
+            <option>Not sure yet</option>
             <option>Brand new &mdash; never played</option>
-            <option>Beginner &mdash; a few games in</option>
-            <option>Intermediate &mdash; playing regularly</option>
-            <option>Advanced / competitive</option>
-            <option>Not sure</option>
+            <option>Beginner (2.0 &ndash; 2.5)</option>
+            <option>Developing (2.5 &ndash; 3.0)</option>
+            <option>Intermediate (3.0 &ndash; 3.5)</option>
+            <option>Advanced (3.5 &ndash; 4.0+)</option>
           </select>
         </div>
       </div>
 
       <div class="field">
-        <label for="interest">What are you interested in?</label>
+        <label for="interest">Which lesson?</label>
         <select id="interest" name="interest">
-          <option>Private lesson</option>
-          <option>Semi-private (2&ndash;3 players)</option>
-          <option>Clinic</option>
-          <option>Intro to pickleball</option>
-          <option>Match prep</option>
-          <option>Lesson package</option>
+          <option>Individual lesson</option>
+          <option>Small group lesson (2&ndash;3 players)</option>
+          <option>Not sure &mdash; whichever Kai suggests</option>
         </select>
       </div>
 
@@ -166,7 +171,6 @@
 
   </div>
 </section>
-
 </main>
 
 <!-- ============================= FOOTER ============================== -->
