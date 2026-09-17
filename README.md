@@ -3,7 +3,7 @@
 Website for **Pay It 4Ward**, a pickleball academy run by coach **Kai Chen**.
 Static HTML/CSS/JS — no build step, no dependencies. Just edit and push.
 
-**Live site:** https://edenkchen.github.io/pay-it-4ward/
+**Live site:** https://payit4wardpickleball.github.io/
 
 ---
 
